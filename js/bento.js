@@ -21,7 +21,7 @@ function getURLParameter (name) {
 function buildStructure () {
   jQuery.each(config.endpoints, function (index, endpoint) {
     var html = `<div class="` + config.nameSpace + endpoint + ` ` + config.nameSpace + `record-box"></div>`
-    JQuery('#bento-results').append(html)
+    jQuery('#bento-results').append(html)
   })
 }
 
