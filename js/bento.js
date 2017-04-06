@@ -36,9 +36,9 @@ function buildBox (data, endpoint) {
     record.author ? html += `<br>` + record.author : ''
     record.source ? html += `<br>` + record.source : ''
     html += `</div>`
-    html += `<div class="` + config.nameSpace + `results-total"><a href="` + data[data.length - 1].resultUrl + `">&gt See all ` + data[data.length - 1].resultNum + ` ` + data[data.length - 1].searchTitle + ` results</a></div>`
-    jQuery('#' + config.nameSpace + endpoint).append(html)
   })
+  html += `<div class="` + config.nameSpace + `results-total"><a href="` + data[data.length - 1].resultUrl + `">&gt See all ` + data[data.length - 1].resultNum + ` ` + data[data.length - 1].searchTitle + ` results</a></div>`
+  jQuery('#' + config.nameSpace + endpoint).append(html)
 }
 
 function failBox (data, endpoint) {
