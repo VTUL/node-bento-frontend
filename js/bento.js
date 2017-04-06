@@ -26,8 +26,8 @@ function buildStructure () {
 }
 
 function buildBox (data, endpoint) {
-  var html = `<div class="` + config.nameSpace + `title">` + data[data.length - 1].searchTitle + `</div>`
-  jQuery.each(data, function (index, record) {
+  var html = `<div class="` + config.nameSpace + `title">` + data.searchTitle + `</div>`
+  jQuery.each(data.records, function (index, record) {
     html += `
     <hr class="` + config.nameSpace + `hr">
     <div class="` + config.nameSpace + `record"><a href="` + record.link + `">` + record.title + `</a>
@@ -37,13 +37,13 @@ function buildBox (data, endpoint) {
     record.source ? html += `<br>` + record.source : ''
     html += `</div>`
   })
-  html += `<div class="` + config.nameSpace + `results-total"><a href="` + data[data.length - 1].resultUrl + `">&gt See all ` + data[data.length - 1].resultNum + ` ` + data[data.length - 1].searchTitle + ` results</a></div>`
+  html += `<div class="` + config.nameSpace + `results-total"><a href="` + data.resultUrl + `">&gt See all ` + data.resultNum + ` ` + data.searchTitle + ` results</a></div>`
   jQuery('#' + config.nameSpace + endpoint).append(html)
 }
 
 function failBox (data, endpoint) {
   var html = `
-    <div class="` + config.nameSpace + `title">` + data[data.length - 1].searchTitle + `</div>
+    <div class="` + config.nameSpace + `title">` + data.searchTitle + `</div>
     <hr class="` + config.nameSpace + `hr">
     <div class="` + config.nameSpace + `record">` + config.noResults + `</div>
     `
