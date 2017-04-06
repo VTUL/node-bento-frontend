@@ -61,7 +61,7 @@ jQuery(document).ready(function () {
       data: { query: sendQuery },
       dataType: 'json',
       success: function (responseData, textStatus, jqXHR) {
-        jQuery('#bento-search-box').val(query)
+        jQuery('#bento-search-box').val(responseData.query)
         buildBox(responseData, endpoint)
       },
       error: function (responseData, textStatus, errorThrown) {
