@@ -4,13 +4,14 @@ var config = {
   'url': 'http://localhost:3000',
   'noResults': 'No results found',
   'crossDomain': false,
-  'nameSpace': 'bento-'
+  'nameSpace': 'bento-',
+  'results':'results.html'
 }
 
 // search page click interrupt
 jQuery('#button').on('click', function () {
-  var query = jQuery('#searchTest').val()
-  window.location.assign('results.html?query=' + query)
+  var query = jQuery('#' + config.nameSpace + 'search-box').val()
+  window.location.assign(config.results+'?query=' + query)
 })
 
 //
@@ -19,9 +20,19 @@ function getURLParameter (name) {
 }
 
 function buildStructure () {
-  jQuery.each(config.endpoints, function (index, endpoint) {
-    var html = `<div id="` + config.nameSpace + endpoint + `" class="` + config.nameSpace + `record-box"></div>`
-    jQuery('#bento-results').append(html)
+  // todo make boxcount and bootstrap column part of config?
+  names = config.nameSpace; boxCount = 2; colWide = 12/boxCount
+  adiv = '<div class="' + names; beg = ''; end = '</div>'
+  conid = names + 'contain'; points = config.endpoints
+
+  jQuery('#bento-results').append(adiv + ' container" id="'
+                                  + conid + '">' + end)
+  jQuery.each(points, function (index, endpoint) {
+    if(index % boxCount == 0) html = adiv + ' row" >'
+    html += '<div id="' + names + endpoint + '" class="' + names + 'record-box col-sm-' + colWide + '"></div>'
+    if(index % boxCount == boxCount - 1
+       || points.length - 1 == index)
+      jQuery('#'+conid).append(html + end)
   })
 }
 
@@ -30,7 +41,7 @@ function buildBox (data, endpoint) {
   jQuery.each(data.records, function (index, record) {
     html += `
     <hr class="` + config.nameSpace + `hr">
-    <div class="` + config.nameSpace + `record"><a href="` + record.link + `">` + record.title + `</a>
+    <div class="` + config.nameSpace + `record"><a href="` + record.url + `">` + record.title + `</a>
     `
     record.year ? html += `<br>` + record.year : ''
     record.author ? html += `<br>` + record.author : ''
