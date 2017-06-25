@@ -48,7 +48,7 @@ function buildBox (data, endpoint) {
     record.source ? html += `<br>` + record.source : ''
     html += `</div>`
   })
-  html += `<div class="` + config.nameSpace + `results-total"><a href="` + data.resultUrl + `">&gt See all ` + data.resultNum + ` ` + data.searchTitle + ` results</a></div>`
+  html += `<div class="` + config.nameSpace + `results-total"><a href="` + data.resultUrl + `">&gt See all ` + data.searchTitle + ` results</a></div>`
   jQuery('#' + config.nameSpace + endpoint).append(html)
 }
 

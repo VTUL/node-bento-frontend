@@ -5,10 +5,17 @@ an html frontend for node bento
 
 ## toc
 
+- [setup]
 - [todo]
 
 
-## todo
+### setup
+
+    chmod u+x mknode.sh
+    ./mknode.sh
+
+
+### todo
 
 - template?
 - integrate aem?
@@ -16,4 +23,5 @@ an html frontend for node bento
 - integrate grunt?
 - integrate gulp?
 
+[setup]: #setup
 [todo]:#todo
