@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-node='search'
-nodeFile=($node 'results')
+node='node'
+nodeFile=('search' 'results')
 htm='.htm'
 startHtm='<!doctype html>
 <html class="no-js" lang="">
