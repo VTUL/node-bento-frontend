@@ -30,12 +30,24 @@ function buildBox (data, endpoint) {
   var html = `<div class="` + config.nameSpace + `title">` + data.searchTitle + `</div>`
   jQuery.each(data.records, function (index, record) {
     html += `
-    <div class="` + config.nameSpace + `record"><a href="` + record.url + `">` + record.title + `</a>
+    <div class="` + config.nameSpace + `record">
+      <div class="title">
+        <a href="` + record.url + `">` + record.title + `</a>
+      </div>
+      <div class="year">
     `
-    record.year ? html += `<br>` + record.year : ''
-    record.author ? html += `<br>` + record.author : ''
-    record.source ? html += `<br>` + record.source : ''
-    html += `</div>`
+    record.year ? html += record.year : ''
+    html+=`
+      </div>
+      <div class="author">
+    `
+    record.author ? html += record.author : ''
+    html+=`
+      </div>
+      <div class="source">
+    `
+    record.source ? html += record.source : ''
+    html += `</div></div>`
   })
   html += `<div class="` + config.nameSpace + `results-total"><a href="` + data.resultUrl + `">&gt See all ` + data.searchTitle + ` results</a></div>`
   jQuery('#' + config.nameSpace + endpoint).append(html)
