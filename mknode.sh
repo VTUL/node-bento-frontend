@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
-nodeFile='brave.htm'
-nodeResult='res.htm'
+node='search'
+nodeFile=($node 'results')
+htm='.htm'
 startHtm='<!doctype html>
 <html class="no-js" lang="">
 <head>'
-endHead='</head>'
-startBody='<body>'
-endBody='</body>'
+endHead='</head>
+<body>'
+endHtml='</body>
+</html>'
 
 
-echo $startHtm > $nodeFile
-cat node-head >> $nodeFile
-echo $endHead $startBody >> $nodeFile
-cat node-body >> $nodeFile
-echo $endBody >> $nodeFile
-
-echo $startHtm > $nodeResult
-cat node-head >> $nodeResult
-echo $endHead $startBody >> $nodeResult
-cat node-body >> $nodeResult
-echo $endBody >> $nodeResult
+for v in ${nodeFile[@]}
+do
+    temp=$v$htm
+    echo $startHtm > $temp
+    cat "$node-head" "$node-css" >> $temp
+    echo $endHead $startBody >> $temp
+    cat "$node-start-body" "$v-results" >> $temp
+    cat "$node-end-body" "$node-js" >> $temp
+    echo $endHtml >> $temp
+done
