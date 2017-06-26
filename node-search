@@ -1,0 +1,6 @@
+    <span>Search:</span>
+    <br>
+    <input id="bento-search-box" type="text" name="search">
+    <br>
+    <br>
+    <div id="button">Submit</div>
