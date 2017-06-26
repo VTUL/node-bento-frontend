@@ -1,13 +1,3 @@
-// configuration variables
-var config = {
-  'endpoints': ['books', 'articles', 'journals', 'databases', 'library', 'libguides'],
-  'url': 'http://localhost:3000',
-  'noResults': 'No results found',
-  'crossDomain': false,
-  'nameSpace': 'bento-',
-  'results':'results.html'
-}
-
 // search page click interrupt
 jQuery('#button').on('click', function () {
   var query = jQuery('#' + config.nameSpace + 'search-box').val()
@@ -25,7 +15,7 @@ function buildStructure () {
   adiv = '<div class="' + names; beg = ''; end = '</div>'
   conid = names + 'contain'; points = config.endpoints
 
-  jQuery('#bento-results').append(adiv + ' container" id="'
+  jQuery('#' + names + 'results').append(adiv + ' container" id="'
                                   + conid + '">' + end)
   jQuery.each(points, function (index, endpoint) {
     if(index % boxCount == 0) html = adiv + ' row" >'
@@ -40,7 +30,6 @@ function buildBox (data, endpoint) {
   var html = `<div class="` + config.nameSpace + `title">` + data.searchTitle + `</div>`
   jQuery.each(data.records, function (index, record) {
     html += `
-    <hr class="` + config.nameSpace + `hr">
     <div class="` + config.nameSpace + `record"><a href="` + record.url + `">` + record.title + `</a>
     `
     record.year ? html += `<br>` + record.year : ''
@@ -72,7 +61,7 @@ jQuery(document).ready(function () {
       data: { query: sendQuery },
       dataType: 'json',
       success: function (responseData, textStatus, jqXHR) {
-        jQuery('#bento-search-box').val(responseData.query)
+        jQuery('#' + config.nameSpace + 'search-box').val(responseData.query)
         buildBox(responseData, endpoint)
       },
       error: function (responseData, textStatus, errorThrown) {

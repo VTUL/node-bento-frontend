@@ -20,4 +20,5 @@ do
     cat "$node-start-body" "$node-search" "$v-results" >> $temp
     cat "$node-end-body" "$node-js" >> $temp
     echo $endHtml >> $temp
+    sed -i -e 's/\r*$/\r/' $temp
 done
