@@ -3,4 +3,4 @@
     <input id="bento-search-box" type="text" name="search">
     <br>
     <br>
-    <div id="button">Submit</div>
+    <div id="button">Submit</div>

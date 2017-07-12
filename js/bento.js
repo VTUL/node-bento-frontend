@@ -1,7 +1,22 @@
 // search page click interrupt
-jQuery('#button').on('click', function () {
-  var query = jQuery('#' + config.nameSpace + 'search-box').val()
-  window.location.assign(config.results+'?query=' + query)
+tname = config.nameSpace + 'search-box'
+tbutton = '#button'
+tkey = 'keypress'
+tid = '#' + tname
+jQuery(tbutton + " input[type=submit], " + tbutton +
+       " a, " + tbutton + " button" ).button()
+
+entry = [[tbutton, 'click'],[tbutton, tkey],
+         [tid, tkey]]
+
+jQuery.each(entry, function (k,v) {
+  jQuery(v[0]).on(v[1], function (e) {
+    if(e.type && e.type == tkey &&
+       e.which && e.which !== 13)
+      return true
+    var query = jQuery(tid).val()
+    window.location.assign(config.results+'?query=' + query)
+  })
 })
 
 //
@@ -27,7 +42,7 @@ function buildStructure () {
 }
 
 function buildBox (data, endpoint) {
-  var html = `<div class="` + config.nameSpace + `title">` + data.searchTitle + `</div>`
+  var html = `<div class="` + config.nameSpace + `title"><a href="` + data.resultUrl + `">` + data.searchTitle + `</a></div>`
   jQuery.each(data.records, function (index, record) {
     html += `
     <div class="` + config.nameSpace + `record">

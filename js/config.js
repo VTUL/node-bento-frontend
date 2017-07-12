@@ -5,5 +5,5 @@ var config = {
   'noResults': 'No results found',
   'crossDomain': false,
   'nameSpace': 'bento-',
-  'results':'results.html'
+  'results':'result.html'
 }
