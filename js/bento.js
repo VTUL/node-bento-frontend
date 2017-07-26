@@ -28,7 +28,7 @@ function buildStructure () {
   // todo make boxcount and bootstrap column part of config?
   names = config.nameSpace; boxCount = 2; colWide = 12/boxCount
   adiv = '<div class="' + names; beg = ''; end = '</div>'
-  conid = names + 'contain'; points = config.endpoints
+  conid = names + 'contain'; points = config.endpoints; html=''
 
   jQuery('#' + names + 'results').append(adiv + ' container" id="'
                                   + conid + '">' + end)
@@ -42,7 +42,10 @@ function buildStructure () {
 }
 
 function buildBox (data, endpoint) {
-  var html = `<div class="` + config.nameSpace + `title"><a href="` + data.resultUrl + `">` + data.searchTitle + `</a></div>`
+  atitle = data.searchTitle
+  var html = '<div class="' + config.nameSpace +
+      'title"><a href="' + data.resultUrl + '" alt="' +
+      atitle + '" >' + data.searchTitle + '</a></div>'
   jQuery.each(data.records, function (index, record) {
     html += `
     <div class="` + config.nameSpace + `record">
@@ -80,12 +83,12 @@ function failBox (data, endpoint) {
 jQuery(document).ready(function () {
   var sendQuery = getURLParameter('query')
   buildStructure()
-  jQuery.each(config.endpoints, function (index, endpoint) {
+  jQuery.each(config.endpoints, function (endpoint, pref) {
     jQuery.ajax({
       type: 'POST',
-      url: config.url + '/' + endpoint,
+      url: 'https://' + pref + config.url + endpoint,
       crossDomain: config.crossDomain,
-      data: { query: sendQuery },
+      data: JSON.stringify({ query: sendQuery }),
       dataType: 'json',
       success: function (responseData, textStatus, jqXHR) {
         jQuery('#' + config.nameSpace + 'search-box').val(responseData.query)
