@@ -32,49 +32,58 @@ function buildStructure () {
 
   jQuery('#' + names + 'results').append(adiv + ' container" id="'
                                   + conid + '">' + end)
+  cnt=0
   jQuery.each(points, function (index, endpoint) {
     if(index % boxCount == 0) html = adiv + ' row" >'
-    html += '<div id="' + names + endpoint + '" class="' + names + 'record-box col-sm-' + colWide + '"></div>'
-    if(index % boxCount == boxCount - 1
-       || points.length - 1 == index)
+    html += '<div id="' + names + index + '" class="' + names + 'record-box col-sm-' + colWide + '"></div>'
+    if(cnt % boxCount == boxCount - 1
+       || points.length - 1 == cnt) 
       jQuery('#'+conid).append(html + end)
+    cnt++
   })
 }
 
 function buildBox (data, endpoint) {
   atitle = data.searchTitle
-  var html = '<div class="' + config.nameSpace +
-      'title"><a href="' + data.resultUrl + '" alt="' +
-      atitle + '" >' + data.searchTitle + '</a></div>'
+  bdiv = '<div class="'
+  ediv = '</div>'
+  atar = '<a target="new" href="'
+  etag = '" >'
+  img = 'img'
+  var html = bdiv + config.nameSpace +
+      'title">' + atar + data.resultUrl + '" alt="' +
+      atitle + etag + data.searchTitle + '</a>' + ediv
   jQuery.each(data.records, function (index, record) {
-    html += `
-    <div class="` + config.nameSpace + `record">
-      <div class="title">
-        <a href="` + record.url + `">` + record.title + `</a>
-      </div>
-      <div class="year">
-    `
-    record.year ? html += record.year : ''
-    html+=`
-      </div>
-      <div class="author">
-    `
-    record.author ? html += record.author : ''
-    html+=`
-      </div>
-      <div class="source">
-    `
-    record.source ? html += record.source : ''
-    html += `</div></div>`
+    fieldn = { title: 'url', year:'', author:'', source: '',
+               image: [img,'<img src="'],
+               fullText: [true, 'Full Text Avalailable'] }
+    tmp = '';
+    html += bdiv + config.nameSpace + 'record' + etag
+    jQuery.each(fieldn, function(k, v) {
+      tmpv = record[k] ? record[k] : ''
+      ba = ''
+      ea = ''
+      
+      if(Array.isArray(v) && v[0] && v[1])
+        switch (v[0]){
+        case tmpv:  tmpv = v[1]; break;
+        case img: tmpv = v[1] + tmpv + etag; break;
+        }
+      if(v!=='' && typeof v == 'string' && record[v]) {
+        ba = atar + record[v] + etag
+        ea = '</a>'
+      }
+      tmp += bdiv + k + etag + ba + tmpv + ea + ediv
+    })
+    html += tmp + ediv
   })
-  html += `<div class="` + config.nameSpace + `results-total"><a href="` + data.resultUrl + `">&gt See all ` + data.searchTitle + ` results</a></div>`
+  html += bdiv + config.nameSpace + `results-total">` + atar + data.resultUrl + `">&gt See all ` + data.searchTitle + ` results</a>`+ediv
   jQuery('#' + config.nameSpace + endpoint).append(html)
 }
 
 function failBox (data, endpoint) {
   var html = `
     <div class="` + config.nameSpace + `title">` + data.searchTitle + `</div>
-    <hr class="` + config.nameSpace + `hr">
     <div class="` + config.nameSpace + `record">` + config.noResults + `</div>
     `
   jQuery('#' + config.nameSpace + endpoint).append(html)
@@ -83,6 +92,7 @@ function failBox (data, endpoint) {
 jQuery(document).ready(function () {
   var sendQuery = getURLParameter('query')
   buildStructure()
+  
   jQuery.each(config.endpoints, function (endpoint, pref) {
     jQuery.ajax({
       type: 'POST',
@@ -91,13 +101,18 @@ jQuery(document).ready(function () {
       data: JSON.stringify({ query: sendQuery }),
       dataType: 'json',
       success: function (responseData, textStatus, jqXHR) {
+        mess='message'
+        fn = buildBox
+        if(typeof responseData.data == 'undefined' ||
+           (responseData[mess] &&
+            responseData[mess] =='There was an error.'))
+          fn = failBox
         jQuery('#' + config.nameSpace + 'search-box').val(responseData.query)
-        buildBox(responseData, endpoint)
+        fn(responseData.data, endpoint)
       },
       error: function (responseData, textStatus, errorThrown) {
         failBox(responseData, endpoint)
         console.log(responseData)
-        console.log(textStatus)
       }
     })
   })
