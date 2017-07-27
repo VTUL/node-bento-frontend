@@ -34,7 +34,7 @@ function buildStructure () {
                                   + conid + '">' + end)
   cnt=0
   jQuery.each(points, function (index, endpoint) {
-    if(index % boxCount == 0) html = adiv + ' row" >'
+    if(cnt % boxCount == 0) html = adiv + ' row" >'
     html += '<div id="' + names + index + '" class="' + names + 'record-box col-sm-' + colWide + '"></div>'
     if(cnt % boxCount == boxCount - 1
        || points.length - 1 == cnt) 
