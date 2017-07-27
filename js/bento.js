@@ -54,9 +54,10 @@ function buildBox (data, endpoint) {
       'title">' + atar + data.resultUrl + '" alt="' +
       atitle + etag + data.searchTitle + '</a>' + ediv
   jQuery.each(data.records, function (index, record) {
+    // please keep image last
     fieldn = { title: 'url', year:'', author:'', source: '',
-               image: [img,'<img src="'],
-               fullText: [true, 'Full Text Avalailable'] }
+               fullText: [true, 'Full Text Avalailable'],
+               image: [img,'<img src="'] }
     tmp = '';
     html += bdiv + config.nameSpace + 'record' + etag
     jQuery.each(fieldn, function(k, v) {
@@ -67,7 +68,9 @@ function buildBox (data, endpoint) {
       if(Array.isArray(v) && v[0] && v[1])
         switch (v[0]){
         case tmpv:  tmpv = v[1]; break;
-        case img: tmpv = v[1] + tmpv + etag; break;
+        case img:
+          if (tmpv === '') return
+          tmpv = v[1] + tmpv + etag; break;
         }
       if(v!=='' && typeof v == 'string' && record[v]) {
         ba = atar + record[v] + etag
