@@ -107,6 +107,7 @@ jQuery(document).ready(function () {
         mess='message'
         fn = buildBox
         if(typeof responseData.data == 'undefined' ||
+           responseData.data.length === 0 ||
            (responseData[mess] &&
             responseData[mess] =='There was an error.'))
           fn = failBox
