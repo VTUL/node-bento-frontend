@@ -50,14 +50,21 @@ function buildBox (data, endpoint) {
   atar = '<a target="new" href="'
   etag = '" >'
   img = 'img'
+  titlea = ''
+  ea = ''
+  if (data.resultUrl !== '') {
+    titlea = atar + data.resultUrl + '" alt="' +
+      atitle + etag
+    ea = '</a>'
+  }
   var html = bdiv + config.nameSpace +
-      'title">' + atar + data.resultUrl + '" alt="' +
-      atitle + etag + data.searchTitle + '</a>' + ediv
+      'title">' + titlea + data.searchTitle + ea + ediv
   jQuery.each(data.records, function (index, record) {
     // please keep image last
     fieldn = { title: 'url', year:'', author:'', source: '',
                fullText: [true, 'Full Text Avalailable'],
-               image: [img,'<img src="'] }
+               image: [img,'<img src="'], volume: '',
+               publication: '', issue: '', page: ''}
     tmp = '';
     html += bdiv + config.nameSpace + 'record' + etag
     jQuery.each(fieldn, function(k, v) {
@@ -85,8 +92,9 @@ function buildBox (data, endpoint) {
 }
 
 function failBox (data, endpoint) {
+  atitle = data.searchTitle ? data.searchTitle : config.titles[endpoint]
   var html = `
-    <div class="` + config.nameSpace + `title">` + data.searchTitle + `</div>
+    <div class="` + config.nameSpace + `title">` + atitle + `</div>
     <div class="` + config.nameSpace + `record">` + config.noResults + `</div>
     `
   jQuery('#' + config.nameSpace + endpoint).append(html)
@@ -106,8 +114,10 @@ jQuery(document).ready(function () {
       success: function (responseData, textStatus, jqXHR) {
         mess='message'
         fn = buildBox
-        if(typeof responseData.data == 'undefined' ||
-           responseData.data.length === 0 ||
+        console.log(typeof responseData.data.records)
+        console.log(responseData.data.records.length)
+        if(typeof responseData.data.records == 'undefined' ||
+           responseData.data.records.length === 0 ||
            (responseData[mess] &&
             responseData[mess] =='There was an error.'))
           fn = failBox

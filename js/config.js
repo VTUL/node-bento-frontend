@@ -7,5 +7,6 @@ var config = {
   'noResults': 'No results found',
   'crossDomain': true,
   'nameSpace': 'bento-',
-  'results':'result.html'
+  'results':'result.html',
+  titles: {books: 'Books & Media', articles: 'Articles', journals: 'Journals', databases: 'Databases', library: 'Library Website', libguides: 'Research Guides'}
 }
