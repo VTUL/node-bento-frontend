@@ -37,19 +37,20 @@ function buildStructure () {
     if(cnt % boxCount == 0) html = adiv + ' row" >'
     html += '<div id="' + names + index + '" class="' + names + 'record-box col-sm-' + colWide + '"></div>'
     if(cnt % boxCount == boxCount - 1
-       || points.length - 1 == cnt) 
+       || points.length - 1 == cnt)
       jQuery('#'+conid).append(html + end)
     cnt++
   })
 }
 
 function buildBox (data, endpoint) {
-  atitle = data.searchTitle
+  atitle = config.titles[endpoint]
   bdiv = '<div class="'
   ediv = '</div>'
   atar = '<a target="new" href="'
   etag = '" >'
   img = 'img'
+  bnd = 'bound'
   titlea = ''
   ea = ''
   if (data.resultUrl !== '') {
@@ -58,26 +59,30 @@ function buildBox (data, endpoint) {
     ea = '</a>'
   }
   var html = bdiv + config.nameSpace +
-      'title">' + titlea + data.searchTitle + ea + ediv
+      'title">' + titlea + atitle + ea + ediv
   jQuery.each(data.records, function (index, record) {
     // please keep image last
     fieldn = { title: 'url', year:'', author:'', source: '',
-               fullText: [true, 'Full Text Avalailable'],
-               image: [img,'<img src="'], volume: '',
-               publication: '', issue: '', page: ''}
+               fullText: [true, 'Full Text Available'],
+               image: [img,'<img src="', etag], publication: '',
+               volume: '', issue: [bnd, '(', ')'],
+               page: [bnd, 'p '] }
     tmp = '';
     html += bdiv + config.nameSpace + 'record' + etag
     jQuery.each(fieldn, function(k, v) {
       tmpv = record[k] ? record[k] : ''
       ba = ''
       ea = ''
-      
+
       if(Array.isArray(v) && v[0] && v[1])
         switch (v[0]){
         case tmpv:  tmpv = v[1]; break;
-        case img:
-          if (tmpv === '') return
-          tmpv = v[1] + tmpv + etag; break;
+        case img: if (tmpv === '') return
+        case bnd:
+          if (tmpv === '') break
+          tmpv = v[1] + tmpv
+          tmpv += v[2] ? v[2]: ''
+          break
         }
       if(v!=='' && typeof v == 'string' && record[v]) {
         ba = atar + record[v] + etag
@@ -87,12 +92,12 @@ function buildBox (data, endpoint) {
     })
     html += tmp + ediv
   })
-  html += bdiv + config.nameSpace + `results-total">` + atar + data.resultUrl + `">&gt See all ` + data.searchTitle + ` results</a>`+ediv
+  html += bdiv + config.nameSpace + `results-total">` + atar + data.resultUrl + `">&gt See all ` + atitle + ` results</a>`+ediv
   jQuery('#' + config.nameSpace + endpoint).append(html)
 }
 
 function failBox (data, endpoint) {
-  atitle = data.searchTitle ? data.searchTitle : config.titles[endpoint]
+  atitle = config.titles[endpoint]
   var html = `
     <div class="` + config.nameSpace + `title">` + atitle + `</div>
     <div class="` + config.nameSpace + `record">` + config.noResults + `</div>
@@ -103,7 +108,7 @@ function failBox (data, endpoint) {
 jQuery(document).ready(function () {
   var sendQuery = getURLParameter('query')
   buildStructure()
-  
+
   jQuery.each(config.endpoints, function (endpoint, pref) {
     jQuery.ajax({
       type: 'POST',
@@ -114,8 +119,6 @@ jQuery(document).ready(function () {
       success: function (responseData, textStatus, jqXHR) {
         mess='message'
         fn = buildBox
-        console.log(typeof responseData.data.records)
-        console.log(responseData.data.records.length)
         if(typeof responseData.data.records == 'undefined' ||
            responseData.data.records.length === 0 ||
            (responseData[mess] &&
