@@ -18,6 +18,7 @@ an html frontend for node bento
 ### todo
 
 - make record field list ordered buildBox
+- fill out setup
 - template?
 - integrate aem?
 - integrate javascript?
